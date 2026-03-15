@@ -1,13 +1,14 @@
-const http=require('http'),fs=require('fs'),path=require('path'),WebSocket=require('ws'),PORT=3000;
-const mime={'html':'text/html','json':'application/json','png':'image/png','svg':'image/svg+xml','js':'application/javascript'};
+const http=require('http'),fs=require('fs'),path=require('path'),WebSocket=require('ws');
+const PORT=process.env.PORT||3000;
+const MIME={'html':'text/html','json':'application/json','png':'image/png','svg':'image/svg+xml','js':'application/javascript','css':'text/css'};
 const tank={level_pct:58,volume_L:290,tank_L:500,pump:'OFF',system:'OK',leak:false,unit:'L',calibrated:true,volume_set:true,low_pct:5,high_pct:95,inflow_Lps:0.084,dailyUsage:[42.1,67.3,45,38.2,62.8,20.5,30.1],monthlyUsage:Array.from({length:30},()=>+(20+Math.random()*50).toFixed(1)),fillTarget:null};
 const httpServer=http.createServer((req,res)=>{
-  let file=req.url==='/'?'index.html':req.url.slice(1);
-  file=path.join(__dirname,file.split('?')[0]);
-  fs.readFile(file,(err,data)=>{
-    if(err){res.writeHead(404);res.end('Not found');return;}
-    const ext=path.extname(file).slice(1);
-    res.writeHead(200,{'Content-Type':mime[ext]||'text/plain'});
+  let filePath=req.url==='/'?'/index.html':req.url.split('?')[0];
+  filePath=path.join(__dirname,filePath);
+  fs.readFile(filePath,(err,data)=>{
+    if(err){res.writeHead(404);res.end('Not found: '+req.url);return;}
+    const ext=path.extname(filePath).slice(1);
+    res.writeHead(200,{'Content-Type':MIME[ext]||'text/plain','Cache-Control':'no-cache'});
     res.end(data);
   });
 });
@@ -21,9 +22,11 @@ setInterval(()=>{
   broadcast({type:'UPDATE',level_pct:+tank.level_pct.toFixed(1),volume_L:+tank.volume_L.toFixed(1),tank_L:tank.tank_L,pump:tank.pump,system:tank.system,leak:tank.leak,unit:tank.unit});
 },2000);
 wss.on('connection',ws=>{
+  console.log('Client connected');
   send(ws,{type:'READY',calibrated:tank.calibrated,volume_set:tank.volume_set,volume_L:tank.tank_L,unit:tank.unit,low_pct:tank.low_pct,high_pct:tank.high_pct,inflow_Lps:tank.inflow_Lps,system:tank.system,message:'ready'});
   ws.on('message',raw=>{
     const cmd=raw.toString().trim().toUpperCase();
+    console.log('CMD:',cmd);
     if(cmd==='FILL'){tank.pump='FILL';send(ws,{type:'PUMP',state:'FILL'});}
     else if(cmd==='DRAIN'){tank.pump='DRAIN';send(ws,{type:'PUMP',state:'DRAIN'});}
     else if(cmd==='STOP'){tank.pump='OFF';tank.fillTarget=null;send(ws,{type:'PUMP',state:'OFF'});}
@@ -37,6 +40,6 @@ wss.on('connection',ws=>{
     else if(cmd==='SIMULATELEAK'){tank.leak=true;send(ws,{type:'LEAKALERT',rate_pct_per_min:6.3});}
     else if(cmd==='CLEARLEAK'){tank.leak=false;send(ws,{type:'LEAKCLEAR'});}
   });
-  ws.on('close',()=>{});
+  ws.on('close',()=>console.log('Client disconnected'));
 });
-httpServer.listen(PORT,'0.0.0.0',()=>{console.log('\n✓ Water Tank server running\n  http://localhost:'+PORT+'\n  Ctrl+C to stop\n');});
+httpServer.listen(PORT,'0.0.0.0',()=>{console.log('\n✓ Water Tank running on port '+PORT+'\n');});
