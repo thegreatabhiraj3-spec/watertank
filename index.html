@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Water Tank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* EXACT SAME STYLES FROM YOUR FLOW */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface2: #f8fafc;
+      --border: #e2e8f0;
+      --border2: #cbd5e1;
+      --text: #0a1929;
+      --text2: #475569;
+      --text3: #64748b;
+      --blue: #2563eb;
+      --blue2: #1d4ed8;
+      --blue-light: #dbeafe;
+      --green: #059669;
+      --green-light: #d1fae5;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --red: #dc2626;
+      --red-light: #fee2e2;
+      --water: #38bdf8;
+      --water-dark: #0284c7;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --radius: 24px;
+      --radius-sm: 16px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 420px;
+      min-height: 100vh;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--surface);
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .header {
+      padding: 20px 24px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+    }
+
+    .header.with-back {
+      padding-top: 48px;
+    }
+
+    .back-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .back-btn:active {
+      background: var(--border);
+      transform: scale(0.96);
+    }
+
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 8px;
+      margin: 20px 24px 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--border2);
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      width: 24px;
+      background: var(--blue);
+    }
+
+    .card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 8px 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card:active {
+      transform: scale(0.98);
+      background: var(--border);
+    }
+
+    .card.highlight {
+      background: var(--blue-light);
+      border-color: var(--blue);
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-features {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    .card-features li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text2);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .card-features .check {
+      color: var(--green);
+      font-size: 16px;
+    }
+
+    .card-features .x {
+      color: var(--red);
+      font-size: 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .badge.blue {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    .device-list {
+      margin: 16px 24px;
+    }
+
+    .device-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .device-item:active {
+      background: var(--border);
+      transform: scale(0.98);
+    }
+
+    .device-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: var(--blue);
+    }
+
+    .device-info {
+      flex: 1;
+    }
+
+    .device-name {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .device-signal {
+      font-size: 12px;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .signal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--green);
+    }
+
+    .wifi-list {
+      margin: 16px 24px;
+    }
+
+    .wifi-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wifi-item:active {
+      background: var(--border);
+    }
+
+    .password-container {
+      margin: 24px 24px 16px;
+    }
+
+    .network-name {
+      font-size: 14px;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+
+    .password-input-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0 16px;
+    }
+
+    .password-input {
+      flex: 1;
+      padding: 18px 0;
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .toggle-password {
+      font-size: 20px;
+      color: var(--text2);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .progress-container {
+      margin: 40px 24px;
+      text-align: center;
+    }
+
+    .progress-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .progress-bar-bg {
+      background: var(--border);
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue), var(--water));
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .btn {
+      margin: 16px 24px;
+      padding: 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+      background: var(--blue2);
+    }
+
+    .btn.secondary {
+      background: var(--surface2);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid var(--border);
+    }
+
+    .btn.link {
+      background: transparent;
+      color: var(--blue);
+      box-shadow: none;
+      padding: 8px;
+      margin: 8px;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      background: var(--green-light);
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 60px auto 24px;
+    }
+
+    .success-title {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .success-desc {
+      text-align: center;
+      color: var(--text2);
+      margin: 0 24px 32px;
+      line-height: 1.6;
+    }
+
+    .dashboard-header {
+      padding: 20px 24px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mode-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .mode-badge.bluetooth {
+      background: var(--amber-light);
+      color: var(--amber);
+    }
+
+    .tank-container {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tank-svg {
+      width: 140px;
+      height: 200px;
+    }
+
+    .level-text {
+      font-size: 40px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      margin-top: 16px;
+    }
+
+    .level-volume {
+      font-size: 16px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+
+    .pump-badge {
+      margin-top: 8px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pump-badge.fill {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    .pump-badge.drain {
+      background: var(--amber-light);
+      color: var(--amber);
+    }
+
+    .pump-badge.off {
+      background: var(--surface2);
+      color: var(--text2);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 24px;
+      margin-bottom: 24px;
+    }
+
+    .control-btn {
+      padding: 20px;
+      border: 1.5px solid;
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-btn.fill {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .control-btn.drain {
+      border-color: var(--amber);
+      color: var(--amber);
+    }
+
+    .control-btn:active {
+      transform: scale(0.96);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .stop-btn {
+      margin: 0 24px 24px;
+      padding: 16px;
+      border: 1.5px solid var(--red);
+      border-radius: var(--radius-sm);
+      background: var(--red-light);
+      color: var(--red);
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .stop-btn.visible {
+      display: flex;
+    }
+
+    .locked-card {
+      margin: 24px;
+      padding: 24px;
+      background: linear-gradient(135deg, var(--surface2), var(--surface));
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius-sm);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .locked-card:active {
+      transform: scale(0.98);
+      background: var(--border);
+    }
+
+    .bottom-nav {
+      display: flex;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 8px 0;
+      margin-top: auto;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text3);
+      cursor: pointer;
+    }
+
+    .nav-item.active {
+      color: var(--blue);
+    }
+
+    .nav-icon {
+      font-size: 22px;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .modal-btn.primary {
+      background: var(--blue);
+      color: white;
+    }
+
+    .modal-btn.secondary {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1001;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+
+    .debug-bar {
+      background: var(--surface2);
+      padding: 8px 16px;
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text2);
+      border-top: 1px solid var(--border);
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+  </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Water Tank">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <script>
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW registered"));
+    }
+  </script>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Water Tank">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <script>
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW registered"));
+    }
+  </script>
+</head>
+<body>
+<div id="app">
+
+<!-- ==================== OPENING SCREEN ==================== -->
+<div id="screen-opening" class="screen active">
+  <div class="header">
+    <div class="header-title">💧 Water Tank</div>
+  </div>
+  <div style="padding: 12px 24px; color: var(--text2);">Let's get you connected.</div>
+  
+  <div class="card" onclick="selectMode('bluetooth')">
+    <div class="card-icon">📶</div>
+    <div class="card-title">While at home</div>
+    <div class="card-desc">Quick connect, no internet needed. Perfect for checking and controlling nearby.</div>
+    <ul class="card-features">
+      <li><span class="check">✓</span> No internet needed</li>
+      <li><span class="check">✓</span> Instant connection</li>
+      <li><span class="check">✓</span> Totally private</li>
+      <li><span class="x">✗</span> Only works nearby (~same room)</li>
+    </ul>
+  </div>
+
+  <div class="card" onclick="selectMode('wifi')">
+    <div class="card-icon">🌐</div>
+    <div class="card-title">From anywhere</div>
+    <div class="card-desc">One-time setup, then monitor remotely forever. Get alerts and smart features.</div>
+    <ul class="card-features">
+      <li><span class="check">✓</span> Check from anywhere</li>
+      <li><span class="check">✓</span> Get alerts on your phone</li>
+      <li><span class="check">✓</span> See usage history</li>
+      <li><span class="x">✗</span> One-time setup at home (~3 min)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== BLUETOOTH CONTEXT ==================== -->
+<div id="screen-bt-context" class="screen">
+  <div class="header with-back">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <div class="header-title">While at home</div>
+  </div>
+  
+  <div class="card highlight" style="margin-top: 24px;">
+    <div class="badge blue">📶 Local only</div>
+    <div class="card-title">Connect directly to your tank</div>
+    <ul class="card-features">
+      <li><span class="check">✓</span> No internet needed</li>
+      <li><span class="check">✓</span> Instant connection</li>
+      <li><span class="check">✓</span> Totally private</li>
+    </ul>
+  </div>
+
+  <button class="btn" onclick="startBluetoothScan()">Find my device</button>
+  <button class="btn secondary" onclick="goBack()">← Back</button>
+</div>
+
+<!-- ==================== WIFI CONTEXT ==================== -->
+<div id="screen-wifi-context" class="screen">
+  <div class="header with-back">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <div class="header-title">From anywhere</div>
+  </div>
+  
+  <div class="card highlight" style="margin-top: 24px;">
+    <div class="badge blue">🌐 Full access</div>
+    <div class="card-title">Connect to WiFi for remote access</div>
+    <ul class="card-features">
+      <li><span class="check">✓</span> Check from anywhere</li>
+      <li><span class="check">✓</span> Get alerts on your phone</li>
+      <li><span class="check">✓</span> See usage history</li>
+      <li><span class="check">✓</span> AI chatbot & smart predictions</li>
+    </ul>
+  </div>
+
+  <button class="btn" onclick="startWifiSetup()">Start 3-minute setup</button>
+  <button class="btn secondary" onclick="goBack()">← Back</button>
+</div>
+
+<!-- ==================== DEVICE SCAN ==================== -->
+<div id="screen-device-scan" class="screen">
+  <div class="header with-back">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <div class="header-title" id="scan-title">Looking for your device...</div>
+  </div>
+
+  <div class="progress-dots" id="scan-dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div style="margin: 24px; color: var(--text2); display: flex; align-items: center; gap: 12px;">
+    <div class="spinner" style="width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <span id="scan-status">Searching for ESP32 devices...</span>
+  </div>
+
+  <div class="device-list" id="device-list">
+    <!-- Devices will appear here dynamically -->
+  </div>
+
+  <div style="margin: 24px; color: var(--text3); font-size: 13px; text-align: center;" id="scan-help">
+    Make sure your ESP32 is powered on and in range.
+  </div>
+  
+  <button class="btn secondary" onclick="rescanDevices()" id="rescan-btn" style="display: none;">Scan again</button>
+</div>
+
+<!-- ==================== WIFI NETWORKS ==================== -->
+<div id="screen-wifi-networks" class="screen">
+  <div class="header with-back">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <div class="header-title">Choose WiFi</div>
+  </div>
+
+  <div class="progress-dots">
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div style="margin: 8px 24px; color: var(--text2);">Last step — connect to your WiFi</div>
+
+  <div class="wifi-list" id="wifi-list">
+    <div style="text-align: center; padding: 40px; color: var(--text3);">Scanning for networks...</div>
+  </div>
+</div>
+
+<!-- ==================== WIFI PASSWORD ==================== -->
+<div id="screen-wifi-password" class="screen">
+  <div class="header with-back">
+    <div class="back-btn" onclick="goBack()">←</div>
+    <div class="header-title">Enter password</div>
+  </div>
+
+  <div class="progress-dots">
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="password-container">
+    <div class="network-name" id="selected-network">Network: </div>
+    <div class="password-input-wrapper">
+      <input type="password" class="password-input" id="wifi-password" placeholder="WiFi password" value="">
+      <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
+    <div class="password-note" style="margin-top: 8px; color: var(--text3); font-size: 12px;">
+      <span>🔒</span> Sent directly to your ESP32
+    </div>
+  </div>
+
+  <button class="btn" onclick="sendWifiCredentials()">Connect to WiFi</button>
+  <button class="btn secondary" onclick="goBack()">Back</button>
+</div>
+
+<!-- ==================== CONNECTING ==================== -->
+<div id="screen-connecting" class="screen">
+  <div class="header">
+    <div class="header-title">Connecting</div>
+  </div>
+
+  <div style="margin: 60px 24px;">
+    <div class="progress-status" id="connect-status">
+      <span>✓</span> <span id="connect-step1">Device found</span>
+    </div>
+    <div class="progress-status" id="connect-status2" style="opacity: 0.5;">
+      <span id="connect-icon2">⏳</span> <span id="connect-step2">Connecting...</span>
+    </div>
+    
+    <div class="progress-bar-bg" style="margin-top: 32px;">
+      <div class="progress-bar" id="connect-progress" style="width: 0%;"></div>
+    </div>
+    <div class="progress-label" id="connect-label">Establishing connection...</div>
+  </div>
+</div>
+
+<!-- ==================== SUCCESS BLUETOOTH ==================== -->
+<div id="screen-success-bt" class="screen">
+  <div class="success-icon">✓</div>
+  <div class="success-title">Connected</div>
+  <div class="success-desc">Your tank is ready. You're connected while at home.</div>
+
+  <div class="locked-card" onclick="showUpgradeModal()">
+    <div class="locked-icon">🌐</div>
+    <div class="locked-title">Upgrade to cloud</div>
+    <div class="locked-desc">Get alerts, chatbot, and check from anywhere</div>
+    <div style="color: var(--blue); font-weight: 600;">Set up remote access →</div>
+  </div>
+
+  <button class="btn" onclick="openDashboard('bluetooth')">Open my tank</button>
+</div>
+
+<!-- ==================== SUCCESS CLOUD ==================== -->
+<div id="screen-success-cloud" class="screen">
+  <div class="success-icon">✓</div>
+  <div class="success-title">All set</div>
+  <div class="success-desc">Your tank is ready. You can now check it from anywhere.</div>
+  <button class="btn" onclick="openDashboard('cloud')">Open my tank</button>
+</div>
+
+<!-- ==================== DASHBOARD ==================== -->
+<div id="screen-dashboard" class="screen">
+  <div class="dashboard-header">
+    <div class="header-title">My Tank</div>
+    <div class="mode-badge bluetooth" id="mode-badge">📶 At home</div>
+  </div>
+
+  <!-- Alert banners -->
+  <div id="leak-banner" style="display: none; margin: 12px 24px 0; padding: 12px; background: var(--red-light); border: 1px solid var(--red); border-radius: var(--radius-sm); color: var(--red);">
+    ⚠️ Possible leak detected
+  </div>
+  
+  <div id="pump-banner" style="display: none; margin: 12px 24px 0; padding: 12px; background: var(--blue-light); border: 1px solid var(--blue); border-radius: var(--radius-sm); color: var(--blue);">
+    <span id="pump-banner-text">Filling...</span>
+  </div>
+
+  <!-- Tank display -->
+  <div class="tank-container">
+    <svg class="tank-svg" viewBox="0 0 140 200">
+      <defs>
+        <clipPath id="tank-clip">
+          <rect x="15" y="15" width="110" height="170" rx="20" />
+        </clipPath>
+        <linearGradient id="water-gradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#38bdf8" />
+          <stop offset="100%" stop-color="#0284c7" />
+        </linearGradient>
+      </defs>
+      <rect x="15" y="15" width="110" height="170" rx="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+      <rect id="water-fill" x="15" y="185" width="110" height="0" fill="url(#water-gradient)" clip-path="url(#tank-clip)" style="transition: y 0.5s ease, height 0.5s ease;" />
+    </svg>
+    <div class="level-text" id="level-text">--%</div>
+    <div class="level-volume" id="level-volume">--- L</div>
+    <div class="pump-badge off" id="pump-status">PUMP OFF</div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="control-btn fill" id="fill-btn" onclick="sendCommand('FILL')" disabled>
+      <span>▲</span> Fill
+    </button>
+    <button class="control-btn drain" id="drain-btn" onclick="sendCommand('DRAIN')" disabled>
+      <span>▼</span> Drain
+    </button>
+  </div>
+
+  <button class="stop-btn" id="stop-btn" onclick="sendCommand('STOP')">
+    <span>■</span> Stop pump
+  </button>
+
+  <!-- Cloud features (locked in BT mode) -->
+  <div id="locked-card" class="locked-card" onclick="showUpgradeModal()">
+    <div class="locked-icon">🔒</div>
+    <div class="locked-title">Chatbot, alerts & more</div>
+    <div class="locked-desc">Ask questions, get predictions, and let the algorithm manage your tank.</div>
+    <div style="color: var(--blue); font-weight: 600;">Set up cloud access →</div>
+  </div>
+
+  <!-- Bottom navigation -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('home', this)">
+      <span class="nav-icon">🏠</span>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('alerts', this)">
+      <span class="nav-icon" id="alerts-icon">🔒</span>
+      <span>Alerts</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span>Settings</span>
+    </button>
+  </div>
+
+  <!-- Debug bar (shows real connection status) -->
+  <div class="debug-bar" id="debug-bar">
+    🔵 Bluetooth: Disconnected | Last: ---
+  </div>
+</div>
+
+<!-- ==================== UPGRADE MODAL ==================== -->
+<div id="upgrade-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title">Needs cloud access</div>
+    <div class="modal-desc">
+      Alerts, chatbot, and smart predictions need WiFi connection.
+      <br><br>
+      Set up now? Takes ~3 minutes.
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn primary" onclick="startCloudUpgrade()">Set up</button>
+      <button class="modal-btn secondary" onclick="closeModal()">Not now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== REAL BLUETOOTH CODE ====================
+let bluetoothDevice = null;
+let bluetoothCharacteristic = null;
+let messageBuffer = '';
+let currentMode = null;
+let history = ['opening'];
+let reconnectAttempts = 0;
+
+// UUIDs for ESP32 BLE UART
+const UART_SERVICE_UUID = '0000ffe0-0000-1000-8000-00805f9b34fb';
+const UART_CHARACTERISTIC_UUID = '0000ffe1-0000-1000-8000-00805f9b34fb';
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${screenId}`).classList.add('active');
+  if (screenId !== history[history.length - 1]) {
+    history.push(screenId);
+  }
+}
+
+function goBack() {
+  if (history.length > 1) {
+    history.pop();
+    showScreen(history[history.length - 1]);
+  }
+}
+
+// ==================== MODE SELECTION ====================
+function selectMode(mode) {
+  currentMode = mode;
+  if (mode === 'bluetooth') {
+    showScreen('bt-context');
+  } else {
+    showScreen('wifi-context');
+  }
+}
+
+// ==================== BLUETOOTH SCANNING ====================
+async function startBluetoothScan() {
+  showScreen('device-scan');
+  document.getElementById('scan-status').textContent = 'Scanning for ESP32 devices...';
+  document.getElementById('device-list').innerHTML = '';
+  document.getElementById('rescan-btn').style.display = 'none';
+  
+  try {
+    // Check if Web Bluetooth is supported
+    if (!navigator.bluetooth) {
+      throw new Error('Web Bluetooth not supported. Use Chrome on Android.');
+    }
+
+    // Scan for devices
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [
+        { namePrefix: 'ESP32' },
+        { namePrefix: 'HC-' },
+        { namePrefix: 'HMSoft' },
+        { services: [UART_SERVICE_UUID] }
+      ],
+      optionalServices: [UART_SERVICE_UUID]
+    });
+
+    // Found a device - show it
+    document.getElementById('device-list').innerHTML = `
+      <div class="device-item" onclick="connectToDevice('${device.id}')">
+        <div class="device-icon">⚡</div>
+        <div class="device-info">
+          <div class="device-name">${device.name || 'ESP32 Device'}</div>
+          <div class="device-signal"><span class="signal-dot"></span> Ready to connect</div>
+        </div>
+        <div style="color: var(--blue); font-weight: 600;">Connect</div>
+      </div>
+    `;
+    
+    bluetoothDevice = device;
+    document.getElementById('scan-status').textContent = 'Device found!';
+    document.getElementById('rescan-btn').style.display = 'block';
+    
+  } catch (error) {
+    console.error('Scan error:', error);
+    document.getElementById('scan-status').textContent = 'No devices found';
+    document.getElementById('device-list').innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--text3);">
+        No ESP32 devices found.<br>
+        Make sure it's powered on and in range.
+      </div>
+    `;
+    document.getElementById('rescan-btn').style.display = 'block';
+  }
+}
+
+async function connectToDevice(deviceId) {
+  if (!bluetoothDevice) return;
+  
+  showScreen('connecting');
+  document.getElementById('connect-progress').style.width = '30%';
+  document.getElementById('connect-step2').textContent = 'Connecting to device...';
+  
+  try {
+    // Connect to GATT server
+    const server = await bluetoothDevice.gatt.connect();
+    document.getElementById('connect-progress').style.width = '60%';
+    
+    // Get service
+    const service = await server.getPrimaryService(UART_SERVICE_UUID);
+    document.getElementById('connect-progress').style.width = '80%';
+    
+    // Get characteristic
+    bluetoothCharacteristic = await service.getCharacteristic(UART_CHARACTERISTIC_UUID);
+    
+    // Enable notifications
+    await bluetoothCharacteristic.startNotifications();
+    bluetoothCharacteristic.addEventListener('characteristicvaluechanged', handleBluetoothData);
+    
+    document.getElementById('connect-progress').style.width = '100%';
+    document.getElementById('connect-label').textContent = 'Connected!';
+    
+    // Update debug bar
+    updateDebugBar(`Connected to ${bluetoothDevice.name || 'ESP32'}`);
+    
+    // Send initial STATUS command
+    setTimeout(() => {
+      sendRawString('STATUS');
+    }, 500);
+    
+    // Show success screen based on mode
+    setTimeout(() => {
+      if (currentMode === 'bluetooth') {
+        showScreen('success-bt');
+      } else {
+        showScreen('success-cloud');
+      }
+    }, 1000);
+    
+  } catch (error) {
+    console.error('Connection error:', error);
+    document.getElementById('connect-label').textContent = 'Connection failed';
+    setTimeout(() => goBack(), 2000);
+  }
+}
+
+// ==================== HANDLE INCOMING DATA ====================
+function handleBluetoothData(event) {
+  const decoder = new TextDecoder('utf-8');
+  const data = decoder.decode(event.target.value);
+  
+  messageBuffer += data;
+  const lines = messageBuffer.split('\n');
+  messageBuffer = lines.pop() || '';
+  
+  lines.forEach(line => {
+    line = line.trim();
+    if (!line) return;
+    
+    try {
+      const json = JSON.parse(line);
+      handleJSONMessage(json);
+    } catch (e) {
+      // Not JSON - ignore or log
+      console.log('Raw:', line);
+    }
+  });
+}
+
+function handleJSONMessage(msg) {
+  console.log('Received:', msg);
+  
+  switch (msg.type) {
+    case 'UPDATE':
+    case 'STATUS':
+      if (msg.level_pct !== undefined) {
+        updateTankLevel(msg.level_pct);
+      }
+      if (msg.volume_L !== undefined) {
+        document.getElementById('level-volume').textContent = Math.round(msg.volume_L) + ' L';
+      }
+      if (msg.pump !== undefined) {
+        updatePumpState(msg.pump);
+      }
+      if (msg.leak) {
+        document.getElementById('leak-banner').style.display = 'flex';
+      } else {
+        document.getElementById('leak-banner').style.display = 'none';
+      }
+      updateDebugBar(`Last: ${msg.type} ${msg.level_pct || ''}%`);
+      break;
+      
+    case 'PUMP':
+      updatePumpState(msg.state);
+      break;
+      
+    case 'AUTOSTOP':
+      showToast(`Auto-stop: ${msg.reason}`);
+      break;
+      
+    case 'LEAKALERT':
+      document.getElementById('leak-banner').style.display = 'flex';
+      showToast('⚠️ Leak detected!');
+      break;
+      
+    case 'LEAKCLEAR':
+      document.getElementById('leak-banner').style.display = 'none';
+      break;
+      
+    case 'READY':
+      updateDebugBar('ESP32 Ready');
+      break;
+  }
+}
+
+// ==================== UPDATE UI ====================
+function updateTankLevel(percent) {
+  percent = Math.min(100, Math.max(0, percent));
+  document.getElementById('level-text').textContent = Math.round(percent) + '%';
+  
+  const water = document.getElementById('water-fill');
+  const height = (percent / 100) * 170;
+  water.setAttribute('y', 185 - height);
+  water.setAttribute('height', height);
+}
+
+function updatePumpState(state) {
+  const pumpDiv = document.getElementById('pump-status');
+  const pumpBanner = document.getElementById('pump-banner');
+  const stopBtn = document.getElementById('stop-btn');
+  const fillBtn = document.getElementById('fill-btn');
+  const drainBtn = document.getElementById('drain-btn');
+  
+  pumpDiv.textContent = `PUMP ${state}`;
+  pumpDiv.className = `pump-badge ${state.toLowerCase()}`;
+  
+  if (state === 'FILL' || state === 'DRAIN') {
+    pumpBanner.style.display = 'flex';
+    pumpBanner.querySelector('span').textContent = state === 'FILL' ? 'Filling...' : 'Draining...';
+    stopBtn.classList.add('visible');
+    fillBtn.disabled = true;
+    drainBtn.disabled = true;
+  } else {
+    pumpBanner.style.display = 'none';
+    stopBtn.classList.remove('visible');
+    fillBtn.disabled = false;
+    drainBtn.disabled = false;
+  }
+}
+
+function updateDebugBar(text) {
+  document.getElementById('debug-bar').innerHTML = `🔵 Bluetooth: ${bluetoothDevice ? 'Connected' : 'Disconnected'} | ${text}`;
+}
+
+// ==================== SEND COMMANDS ====================
+function sendCommand(cmd) {
+  if (!bluetoothCharacteristic) {
+    showToast('Not connected to ESP32');
+    return;
+  }
+  sendRawString(cmd);
+  showToast(`Sent: ${cmd}`);
+}
+
+async function sendRawString(str) {
+  if (!bluetoothCharacteristic) return;
+  try {
+    const encoder = new TextEncoder();
+    await bluetoothCharacteristic.writeValue(encoder.encode(str + '\n'));
+  } catch (error) {
+    console.error('Send error:', error);
+  }
+}
+
+// ==================== WIFI SETUP ====================
+function startWifiSetup() {
+  currentMode = 'wifi';
+  startBluetoothScan(); // First connect to device via BT
+}
+
+function rescanDevices() {
+  startBluetoothScan();
+}
+
+// ==================== DASHBOARD ====================
+function openDashboard(mode) {
+  currentMode = mode;
+  document.getElementById('mode-badge').textContent = mode === 'bluetooth' ? '📶 At home' : '🌐 Remote';
+  document.getElementById('mode-badge').className = `mode-badge ${mode}`;
+  
+  // Enable controls if connected
+  if (bluetoothCharacteristic) {
+    document.getElementById('fill-btn').disabled = false;
+    document.getElementById('drain-btn').disabled = false;
+  }
+  
+  showScreen('dashboard');
+  history = ['dashboard'];
+}
+
+function switchTab(tab, element) {
+  document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+  element.classList.add('active');
+  
+  if (tab === 'alerts' && currentMode === 'bluetooth') {
+    showUpgradeModal();
+  }
+}
+
+// ==================== MODALS & TOASTS ====================
+function showUpgradeModal() {
+  document.getElementById('upgrade-modal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('upgrade-modal').style.display = 'none';
+}
+
+function startCloudUpgrade() {
+  closeModal();
+  currentMode = 'wifi';
+  startBluetoothScan();
+}
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function togglePassword() {
+  const input = document.getElementById('wifi-password');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// ==================== CHECK BLUETOOTH SUPPORT ====================
+if (!navigator.bluetooth) {
+  document.getElementById('scan-help').innerHTML = '❌ Web Bluetooth not supported. Use Chrome on Android.';
+}
+</script>
+</body>
+</html>
