@@ -1258,12 +1258,15 @@ function updateDebugBar(text) {
 
 // ==================== SEND COMMANDS ====================
 function sendCommand(cmd) {
-  if (!bluetoothCharacteristic) {
-    showToast('Not connected to ESP32');
-    return;
+  if (currentMode === 'cloud') {
+    sendCloudCommand(cmd);
+    showToast('Sent: ' + cmd);
+  } else if (bluetoothCharacteristic) {
+    sendRawString(cmd);
+    showToast('Sent: ' + cmd);
+  } else {
+    showToast('Not connected');
   }
-  sendRawString(cmd);
-  showToast(`Sent: ${cmd}`);
 }
 
 async function sendRawString(str) {
@@ -1287,13 +1290,70 @@ function rescanDevices() {
 }
 
 // ==================== DASHBOARD ====================
+let cloudWS = null;
+
+function connectCloud() {
+  const url = 'wss://watertank-4vj5.onrender.com';
+  cloudWS = new WebSocket(url);
+  cloudWS.onopen = function() {
+    console.log('Cloud connected');
+    updateDebugBar('Cloud: Connected');
+    document.getElementById('fill-btn').disabled = false;
+    document.getElementById('drain-btn').disabled = false;
+  };
+  cloudWS.onmessage = function(e) {
+    try {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'UPDATE' || msg.type === 'STATUS') {
+        updateTankLevel(msg.level_pct);
+        updatePumpState(msg.pump);
+        if (msg.level_pct !== undefined) {
+          const vol = Math.round(msg.volume_L || 0);
+          const total = Math.round(msg.tank_L || 500);
+          const el = document.getElementById('volume-text');
+          if (el) el.textContent = vol + ' L / ' + total + ' L';
+        }
+      } else if (msg.type === 'PUMP') {
+        updatePumpState(msg.state);
+      } else if (msg.type === 'AUTOSTOP') {
+        showToast(msg.reason === 'high_level' ? 'Tank full - pump stopped' : 'Minimum reached - pump stopped');
+        updatePumpState('OFF');
+      } else if (msg.type === 'PREDICT') {
+        if (!msg.error) {
+          const d = Math.floor(msg.days_left);
+          const el = document.getElementById('predict-text');
+          if (el) el.textContent = '~' + d + ' days remaining';
+        }
+      } else if (msg.type === 'LAST7DAYS') {
+        renderUsageChart(msg);
+      }
+    } catch(err) { console.error(err); }
+  };
+  cloudWS.onclose = function() {
+    updateDebugBar('Cloud: Disconnected - reconnecting...');
+    setTimeout(connectCloud, 3000);
+  };
+  cloudWS.onerror = function() { cloudWS.close(); };
+}
+
+function sendCloudCommand(cmd) {
+  if (cloudWS && cloudWS.readyState === WebSocket.OPEN) {
+    cloudWS.send(cmd);
+  } else {
+    showToast('Not connected to cloud');
+  }
+}
+
 function openDashboard(mode) {
   currentMode = mode;
   document.getElementById('mode-badge').textContent = mode === 'bluetooth' ? '📶 At home' : '🌐 Remote';
   document.getElementById('mode-badge').className = `mode-badge ${mode}`;
   
-  // Enable controls if connected
-  if (bluetoothCharacteristic) {
+  if (mode === 'cloud') {
+    connectCloud();
+    document.getElementById('fill-btn').disabled = true;
+    document.getElementById('drain-btn').disabled = true;
+  } else if (bluetoothCharacteristic) {
     document.getElementById('fill-btn').disabled = false;
     document.getElementById('drain-btn').disabled = false;
   }
