@@ -1453,7 +1453,7 @@ let bluetoothDevice = null;
 let bluetoothCharacteristic = null;
 let messageBuffer = '';
 let currentMode = null;
-let history = ['opening'];
+let navHistory = ['opening'];
 let reconnectAttempts = 0;
 
 // UUIDs for ESP32 BLE UART
@@ -1464,8 +1464,8 @@ const UART_CHARACTERISTIC_UUID = '0000ffe1-0000-1000-8000-00805f9b34fb';
 function showScreen(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(`screen-${screenId}`).classList.add('active');
-  if (screenId !== history[history.length - 1]) {
-    history.push(screenId);
+  if (screenId !== navHistory[history.length - 1]) {
+    navHistory.push(screenId);
   }
 }
 
@@ -1474,9 +1474,9 @@ function goBack() {
     showScreen('opening');
     return;
   }
-  if (history.length > 1) {
-    history.pop();
-    showScreen(history[history.length - 1]);
+  if (navHistory.length > 1) {
+    navHistory.pop();
+    showScreen(navHistory[navHistory.length - 1]);
   }
 }
 
@@ -1815,7 +1815,7 @@ function openDashboard(mode) {
   }
   
   showScreen('dashboard');
-  history = ['dashboard'];
+  navHistory = ['dashboard'];
 }
 
 // REPLACED
