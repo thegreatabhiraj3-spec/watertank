@@ -812,6 +812,178 @@
     }
     .pill:active { transform: scale(0.97); }
 
+  
+    /* ── CHAT PANEL ── */
+    #panel-chat {
+      display: none;
+      flex-direction: column;
+      height: calc(100vh - 130px);
+      padding: 0;
+    }
+    #panel-chat.active { display: flex; }
+    .chat-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .chat-header-title {
+      font-size: 17px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .aqua-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0%,100%{opacity:1} 50%{opacity:0.4}
+    }
+    .chat-header-sub {
+      font-size: 12px; color: var(--text3); margin-top: 2px;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .chat-msg {
+      max-width: 82%; padding: 11px 15px;
+      border-radius: 18px; font-size: 14px;
+      line-height: 1.55; word-wrap: break-word;
+    }
+    .chat-msg.bot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .chat-msg.user {
+      background: var(--blue);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-msg.typing {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      padding: 14px 18px;
+    }
+    .typing-dots { display: flex; gap: 4px; align-items: center; }
+    .typing-dots span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--text3); animation: bounce 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .chat-input-area {
+      padding: 10px 12px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1; padding: 11px 16px;
+      border: 1.5px solid var(--border2);
+      border-radius: 22px;
+      font-size: 14px; color: var(--text);
+      background: var(--bg);
+      outline: none; font-family: inherit;
+      transition: border-color 0.2s;
+      resize: none; max-height: 80px;
+    }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--blue); color: white; border: none;
+      cursor: pointer; font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+      transition: all 0.15s;
+    }
+    .chat-send-btn:active { transform: scale(0.95); }
+    .chat-locked-state {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 40px 24px; gap: 12px;
+    }
+    .chat-lock-icon { font-size: 44px; }
+    .chat-lock-title { font-size: 18px; font-weight: 700; }
+    .chat-lock-desc {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.6; max-width: 260px;
+    }
+    .chat-unlock-btn {
+      padding: 13px 28px;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: white; border: none; border-radius: 12px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: inherit; margin-top: 8px;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    .chat-suggestion-pills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 0 12px 10px;
+    }
+    .pill {
+      padding: 6px 13px; background: var(--blue-light);
+      color: var(--blue); border: none; border-radius: 16px;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .pill:active { transform: scale(0.97); }
+
+  
+    @keyframes pulse-green { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .aqua-card { cursor: pointer; transition: transform 0.15s; }
+    .aqua-card:active { transform: scale(0.98); }
+    .aqua-msg-bot {
+      max-width: 82%; padding: 11px 15px;
+      background: white; border: 1px solid #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      font-size: 14px; line-height: 1.55;
+      color: #0a1929; align-self: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      word-wrap: break-word;
+    }
+    .aqua-msg-user {
+      max-width: 82%; padding: 11px 15px;
+      background: linear-gradient(135deg,#2563eb,#1d4ed8);
+      border-radius: 18px 18px 4px 18px;
+      font-size: 14px; line-height: 1.55;
+      color: white; align-self: flex-end;
+      word-wrap: break-word;
+    }
+    .aqua-typing {
+      display: flex; gap: 4px; align-items: center;
+      padding: 12px 16px; background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      align-self: flex-start;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .aqua-typing span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #94a3b8; animation: bounce 1.2s infinite;
+    }
+    .aqua-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .aqua-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+    .aqua-pill {
+      padding: 6px 13px; background: white;
+      color: #2563eb; border: 1.5px solid #bfdbfe;
+      border-radius: 16px; font-size: 12px;
+      font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .aqua-pill:active { background: #eff6ff; transform: scale(0.97); }
+    #screen-aqua { display: none; flex-direction: column; height: 100vh; }
+    #screen-aqua.active { display: flex; }
+
   </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2563eb">
@@ -866,6 +1038,18 @@
       <li><span class="check">✓</span> See usage history</li>
       <li><span class="x">✗</span> One-time setup at home (~3 min)</li>
     </ul>
+  </div>
+
+  <!-- Ask Aqua button -->
+  <div class="card aqua-card" onclick="openAquaChat()" style="background:linear-gradient(135deg,#1e1b4b,#312e81);border:none;margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🤖</div>
+      <div>
+        <div style="font-size:16px;font-weight:700;color:white;">Ask Aqua</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:2px;">Water advisor & tank assistant</div>
+      </div>
+      <div style="margin-left:auto;color:rgba(255,255,255,0.4);font-size:20px;">›</div>
+    </div>
   </div>
 </div>
 
@@ -1035,6 +1219,52 @@
 </div>
 
 <!-- ==================== DASHBOARD ==================== -->
+
+<!-- ==================== AQUA CHAT SCREEN ==================== -->
+<div id="screen-aqua" class="screen">
+  <div style="background:linear-gradient(135deg,#1e1b4b,#312e81);padding:20px 20px 16px;display:flex;align-items:center;gap:12px;">
+    <button onclick="goBack()" style="background:rgba(255,255,255,0.15);border:none;color:white;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;">←</button>
+    <div style="flex:1;">
+      <div style="font-size:17px;font-weight:700;color:white;display:flex;align-items:center;gap:8px;">
+        <div id="aqua-status-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse-green 2s infinite;"></div>
+        Aqua
+      </div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:1px;">AquaIQ water assistant</div>
+    </div>
+    <div id="aqua-tank-badge" style="display:none;background:rgba(255,255,255,0.15);padding:5px 11px;border-radius:20px;font-size:12px;font-weight:600;color:white;">
+      Tank: <span id="aqua-level-badge">--</span>
+    </div>
+  </div>
+
+  <div id="aqua-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#f5f7fa;"></div>
+
+  <!-- Suggestion pills -->
+  <div id="aqua-pills" style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;background:#f5f7fa;border-top:1px solid #e2e8f0;">
+    <button class="aqua-pill" onclick="usePill(this)">How's my tank?</button>
+    <button class="aqua-pill" onclick="usePill(this)">How long will water last?</button>
+    <button class="aqua-pill" onclick="usePill(this)">Water saving tips</button>
+    <button class="aqua-pill" onclick="usePill(this)">Should I fill now?</button>
+  </div>
+
+  <!-- Confirm action buttons (hidden until needed) -->
+  <div id="aqua-confirm" style="display:none;padding:10px 14px;background:white;border-top:1px solid #e2e8f0;">
+    <div id="aqua-confirm-text" style="font-size:13px;color:#475569;margin-bottom:8px;text-align:center;"></div>
+    <div style="display:flex;gap:8px;">
+      <button id="aqua-confirm-yes" onclick="confirmAction(true)" style="flex:1;padding:11px;background:#2563eb;color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">Yes, do it</button>
+      <button onclick="confirmAction(false)" style="flex:1;padding:11px;background:#f1f5f9;color:#475569;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;">No thanks</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:8px;padding:10px 12px 14px;background:white;border-top:1px solid #e2e8f0;align-items:flex-end;">
+    <input id="aqua-input" type="text" placeholder="Ask about your water..."
+      style="flex:1;padding:11px 16px;border:1.5px solid #cbd5e1;border-radius:22px;font-size:14px;color:#0a1929;background:#f8fafc;outline:none;font-family:inherit;"
+      onkeydown="if(event.key==='Enter')sendAqua()"
+      onfocus="this.style.borderColor='#2563eb'"
+      onblur="this.style.borderColor='#cbd5e1'"/>
+    <button onclick="sendAqua()" style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:white;border:none;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(37,99,235,0.35);">↑</button>
+  </div>
+</div>
+
 <div id="screen-dashboard" class="screen">
   <div class="dashboard-header">
     <div class="header-title">My Tank</div>
@@ -1090,6 +1320,47 @@
     <div class="locked-title">Chatbot, alerts & more</div>
     <div class="locked-desc">Ask questions, get predictions, and let the algorithm manage your tank.</div>
     <div style="color: var(--blue); font-weight: 600;">Set up cloud access →</div>
+  </div>
+
+
+  <!-- ==================== CHAT PANEL ==================== -->
+  <div id="panel-chat">
+    <!-- Locked state shown in BT mode -->
+    <div class="chat-locked-state" id="chat-locked">
+      <div class="chat-lock-icon">🤖</div>
+      <div class="chat-lock-title">Meet Aqua</div>
+      <div class="chat-lock-desc">
+        Your AI tank assistant. Ask about water levels,
+        usage patterns, predictions, or control the pump
+        by just talking.
+      </div>
+      <button class="chat-unlock-btn" onclick="showUpgradeModal()">
+        Set up cloud access →
+      </button>
+    </div>
+    <!-- Active chat shown in cloud mode -->
+    <div id="chat-active-state" style="display:none;flex-direction:column;flex:1">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <div class="aqua-dot"></div>
+          Aqua
+        </div>
+        <div class="chat-header-sub">AquaIQ AI assistant · Powered by Gemini</div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-suggestion-pills" id="chat-pills">
+        <button class="pill" onclick="usePill(this)">How much water do I have?</button>
+        <button class="pill" onclick="usePill(this)">How long will it last?</button>
+        <button class="pill" onclick="usePill(this)">Fill to 80%</button>
+        <button class="pill" onclick="usePill(this)">Any leaks?</button>
+      </div>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chat-input" type="text"
+          placeholder="Ask Aqua anything..."
+          onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="chat-send-btn" onclick="sendChat()">↑</button>
+      </div>
+    </div>
   </div>
 
 
@@ -1199,6 +1470,10 @@ function showScreen(screenId) {
 }
 
 function goBack() {
+  if (document.getElementById('screen-aqua').classList.contains('active')) {
+    showScreen('opening');
+    return;
+  }
   if (history.length > 1) {
     history.pop();
     showScreen(history[history.length - 1]);
@@ -1342,6 +1617,9 @@ function handleBluetoothData(event) {
 }
 
 function handleJSONMessage(msg) {
+  if (typeof updateAquaData === 'function') updateAquaData(msg);
+  // Keep chat context updated with live data
+  if (typeof updateChatContext === 'function') updateChatContext(msg);
   // Keep chat context updated with live data
   if (typeof updateChatContext === 'function') updateChatContext(msg);
   console.log('Received:', msg);
@@ -1475,6 +1753,10 @@ function connectCloud() {
   };
   cloudWS.onmessage = function(e) {
     try {
+      var d = JSON.parse(e.data);
+      if (typeof updateAquaData === 'function') updateAquaData(d);
+    } catch(x) {}
+    try {
       const msg = JSON.parse(e.data);
       if (msg.type === 'UPDATE' || msg.type === 'STATUS') {
         updateTankLevel(msg.level_pct);
@@ -1524,6 +1806,7 @@ function openDashboard(mode) {
   if (mode === 'cloud') {
     connectCloud();
     activateChat && setTimeout(function(){}, 100);
+    activateChat && setTimeout(function(){}, 100);
     document.getElementById('fill-btn').disabled = true;
     document.getElementById('drain-btn').disabled = true;
   } else if (bluetoothCharacteristic) {
@@ -1535,6 +1818,7 @@ function openDashboard(mode) {
   history = ['dashboard'];
 }
 
+// REPLACED
 function switchTab(tab, element) {
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
   element.classList.add('active');
@@ -1784,6 +2068,416 @@ function activateChat() {
   document.getElementById('chat-locked').style.display = 'none';
   document.getElementById('chat-active-state').style.display = 'flex';
   setTimeout(initChat, 300);
+}
+
+
+// ==================== AQUA AI CHATBOT ====================
+const GEMINI_KEY = 'AIzaSyDz8x5hGY8KQVQ8i3qnvOPPiVT_8PvNTbk';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+
+let chatHistory = [];
+let tankContext = {
+  level_pct: 58, volume_L: 290, tank_L: 500,
+  pump: 'OFF', unit: 'L', avg_daily: 43,
+  days_left: 6.7, leak: false
+};
+
+function updateChatContext(data) {
+  if (data.level_pct !== undefined) tankContext.level_pct = data.level_pct;
+  if (data.volume_L !== undefined) tankContext.volume_L = data.volume_L;
+  if (data.tank_L !== undefined) tankContext.tank_L = data.tank_L;
+  if (data.pump !== undefined) tankContext.pump = data.pump;
+  if (data.unit !== undefined) tankContext.unit = data.unit;
+  if (data.leak !== undefined) tankContext.leak = data.leak;
+  if (data.avg_daily_L !== undefined) tankContext.avg_daily = data.avg_daily_L;
+  if (data.days_left !== undefined) tankContext.days_left = data.days_left;
+}
+
+function getSystemPrompt() {
+  return `You are Aqua, the AI assistant for AquaIQ — a smart water tank monitoring system. You have a friendly, concise, and slightly witty personality. You care about water conservation.
+
+Current tank status:
+- Level: ${Math.round(tankContext.level_pct)}% full
+- Volume: ${Math.round(tankContext.volume_L)} ${tankContext.unit} of ${tankContext.tank_L} ${tankContext.unit} total
+- Pump: ${tankContext.pump}
+- Avg daily usage: ${tankContext.avg_daily} ${tankContext.unit}/day
+- Days remaining: ~${Math.round(tankContext.days_left * 10) / 10} days
+- Leak detected: ${tankContext.leak ? 'YES - ALERT' : 'No'}
+
+You can control the tank. If the user asks you to fill, drain, stop the pump, or fill to a specific percentage, include a JSON action at the END of your response in this exact format on its own line:
+ACTION:{"cmd":"FILL"}
+or ACTION:{"cmd":"DRAIN"}
+or ACTION:{"cmd":"STOP"}
+or ACTION:{"cmd":"FILLTO 80"}
+
+Rules:
+- Keep responses SHORT (2-3 sentences max unless explaining something complex)
+- Never repeat yourself across messages
+- Be conversational, not robotic
+- If the tank is critically low (<10%), always mention it urgently
+- If a leak is detected, always warn the user
+- Don't say "I'm an AI" or "As an AI" — you're Aqua, a tank assistant
+- Use the actual numbers from the tank status above`;
+}
+
+function appendMsg(text, role) {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  // Handle newlines
+  div.innerHTML = text.replace(/\n/g, '<br>');
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg typing';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function hidePills() {
+  const pills = document.getElementById('chat-pills');
+  if (pills) pills.style.display = 'none';
+}
+
+function usePill(btn) {
+  const text = btn.textContent;
+  hidePills();
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  if (!inp) return;
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  hidePills();
+
+  appendMsg(msg, 'user');
+  chatHistory.push({ role: 'user', parts: [{ text: msg }] });
+
+  showTyping();
+
+  try {
+    const body = {
+      system_instruction: { parts: [{ text: getSystemPrompt() }] },
+      contents: chatHistory,
+      generationConfig: {
+        temperature: 0.85,
+        maxOutputTokens: 300,
+        topP: 0.95
+      }
+    };
+
+    const res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+    hideTyping();
+
+    if (!res.ok) {
+      throw new Error(data.error?.message || 'API error');
+    }
+
+    let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response. Try again.";
+
+    // Extract and execute action if present
+    const actionMatch = reply.match(/ACTION:(\{[^}]+\})/);
+    if (actionMatch) {
+      try {
+        const action = JSON.parse(actionMatch[1]);
+        reply = reply.replace(/ACTION:\{[^}]+\}/, '').trim();
+        // Execute the command
+        if (action.cmd) {
+          sendCommand(action.cmd);
+        }
+      } catch(e) {}
+    }
+
+    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+    appendMsg(reply, 'bot');
+
+  } catch (err) {
+    hideTyping();
+    appendMsg("Hmm, something went wrong connecting to my brain. Check your internet and try again.", 'bot');
+    console.error('Gemini error:', err);
+  }
+}
+
+function initChat() {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs || msgs.children.length > 0) return;
+
+  // Greeting based on tank status
+  let greeting;
+  if (tankContext.leak) {
+    greeting = "⚠️ Hey — I'm detecting a possible leak. The level is dropping faster than normal. Check your pipes!";
+  } else if (tankContext.level_pct < 10) {
+    greeting = "Hi, I'm Aqua! Quick warning — your tank is critically low at " + Math.round(tankContext.level_pct) + "%. Want me to start filling?";
+  } else if (tankContext.level_pct < 25) {
+    greeting = "Hi, I'm Aqua! Your tank is getting low (" + Math.round(tankContext.level_pct) + "%). You've got about " + Math.round(tankContext.days_left) + " days left. Anything I can help with?";
+  } else {
+    const greetings = [
+      "Hey! I'm Aqua, your tank assistant. Your water's looking good — " + Math.round(tankContext.level_pct) + "% full. What do you need?",
+      "Hi there! Aqua here. Tank is at " + Math.round(tankContext.level_pct) + "% — about " + Math.round(tankContext.days_left) + " days of water. Ask me anything.",
+      "Hello! I'm keeping an eye on your " + tankContext.tank_L + " " + tankContext.unit + " tank. Currently " + Math.round(tankContext.level_pct) + "% full. How can I help?"
+    ];
+    greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  appendMsg(greeting, 'bot');
+  chatHistory.push({ role: 'model', parts: [{ text: greeting }] });
+}
+
+function activateChat() {
+  document.getElementById('chat-locked').style.display = 'none';
+  document.getElementById('chat-active-state').style.display = 'flex';
+  setTimeout(initChat, 300);
+}
+
+
+// ==================== AQUA AI CHATBOT ====================
+const GEMINI_KEY = 'AIzaSyDz8x5hGY8KQVQ8i3qnvOPPiVT_8PvNTbk';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+
+var aquaHistory = [];
+var aquaPendingAction = null;
+var aquaTankData = {
+  connected: false,
+  level_pct: null,
+  volume_L: null,
+  tank_L: 500,
+  pump: 'OFF',
+  unit: 'L',
+  avg_daily: null,
+  days_left: null,
+  leak: false
+};
+
+function updateAquaData(data) {
+  aquaTankData.connected = true;
+  if (data.level_pct !== undefined) aquaTankData.level_pct = data.level_pct;
+  if (data.volume_L !== undefined) aquaTankData.volume_L = data.volume_L;
+  if (data.tank_L !== undefined) aquaTankData.tank_L = data.tank_L;
+  if (data.pump !== undefined) aquaTankData.pump = data.pump;
+  if (data.unit !== undefined) aquaTankData.unit = data.unit;
+  if (data.leak !== undefined) aquaTankData.leak = data.leak;
+  if (data.avg_daily_L !== undefined) aquaTankData.avg_daily = data.avg_daily_L;
+  if (data.days_left !== undefined) aquaTankData.days_left = data.days_left;
+
+  // Update badge in chat header
+  var badge = document.getElementById('aqua-tank-badge');
+  var levelBadge = document.getElementById('aqua-level-badge');
+  if (badge && levelBadge && aquaTankData.level_pct !== null) {
+    badge.style.display = 'block';
+    levelBadge.textContent = Math.round(aquaTankData.level_pct) + '%';
+  }
+}
+
+function getAquaSystemPrompt() {
+  var tankInfo = '';
+  if (aquaTankData.connected && aquaTankData.level_pct !== null) {
+    tankInfo = `
+LIVE TANK DATA (user is connected):
+- Level: ${Math.round(aquaTankData.level_pct)}% full
+- Volume: ${Math.round(aquaTankData.volume_L)} ${aquaTankData.unit} of ${aquaTankData.tank_L} ${aquaTankData.unit} total capacity
+- Pump status: ${aquaTankData.pump}
+- Average daily usage: ${aquaTankData.avg_daily || 'unknown'} ${aquaTankData.unit}/day
+- Estimated days remaining: ${aquaTankData.days_left ? '~' + Math.round(aquaTankData.days_left * 10)/10 + ' days' : 'calculating...'}
+- Leak detected: ${aquaTankData.leak ? 'YES - URGENT' : 'No'}`;
+  } else {
+    tankInfo = 'TANK STATUS: Not connected to a tank device yet.';
+  }
+
+  return `You are Aqua, the AI water assistant for AquaIQ — a smart home water tank monitoring system. You have a warm, helpful, slightly witty personality. You are like a knowledgeable friend who happens to be an expert on water.
+
+${tankInfo}
+
+YOUR PERSONALITY:
+- Warm, concise, conversational — like texting a smart friend
+- Never robotic or overly formal
+- Use the user's context smartly (if they say "going to Goa tomorrow", understand they'll be away and factor that into advice)
+- Keep responses SHORT — 2-4 sentences usually, unless explaining something complex
+- Never repeat the same phrasing twice in a conversation
+
+WHAT YOU ANSWER:
+- Everything related to their water tank (level, usage, filling, draining, leaks, predictions)
+- Water conservation tips and advice
+- Water usage recommendations for their lifestyle
+- General water-related questions (water quality, saving water, etc.)
+- Life context that affects water (trips, guests, seasons, etc.)
+
+WHAT YOU DON'T ANSWER:
+- Anything completely unrelated to water (politics, sports, entertainment, etc.)
+- For off-topic questions, kindly redirect: "I'm a water specialist — ask me about your tank or saving water instead!"
+
+IMPORTANT — ACTIONS:
+If the user wants you to do something to the tank (fill, drain, stop, fill to X%), you MUST:
+1. First explain what you'll do and why
+2. Ask for confirmation by ending your response with exactly this format:
+CONFIRM:{"cmd":"FILL","label":"Start filling the tank"}
+or CONFIRM:{"cmd":"FILLTO 80","label":"Fill tank to 80%"}
+or CONFIRM:{"cmd":"DRAIN","label":"Start draining"}
+or CONFIRM:{"cmd":"STOP","label":"Stop the pump"}
+
+Never execute actions without asking first.
+Never use markdown formatting like ** or ## in responses.`;
+}
+
+function openAquaChat() {
+  showScreen('aqua');
+  var msgs = document.getElementById('aqua-messages');
+  if (msgs && msgs.children.length === 0) {
+    // Initial greeting based on tank status
+    var greeting;
+    if (!aquaTankData.connected) {
+      greeting = "Hi! I'm Aqua, your water assistant. I can answer questions about water conservation and tank management. Connect your tank via Bluetooth or WiFi to get personalized advice about your water levels!";
+    } else if (aquaTankData.leak) {
+      greeting = "Hey — heads up, I'm detecting a possible leak right now. Your level is dropping faster than normal. Check your pipes and connections. Want me to stop the pump?";
+    } else if (aquaTankData.level_pct < 15) {
+      greeting = "Hi! Quick heads up — your tank is critically low at " + Math.round(aquaTankData.level_pct) + "%. That's less than a day of water. Want me to start filling?";
+    } else if (aquaTankData.level_pct < 30) {
+      greeting = "Hey! Tank is getting low — " + Math.round(aquaTankData.level_pct) + "% with about " + (aquaTankData.days_left ? Math.round(aquaTankData.days_left) + " days" : "a few days") + " left. Anything I can help with?";
+    } else {
+      var greetings = [
+        "Hey! Tank is looking good at " + Math.round(aquaTankData.level_pct) + "% — about " + (aquaTankData.days_left ? Math.round(aquaTankData.days_left) + " days" : "several days") + " of water. What's on your mind?",
+        "Hi there! Your tank is at " + Math.round(aquaTankData.level_pct) + "%, all good. Ask me anything about your water.",
+        "Hello! Aqua here — keeping an eye on your " + aquaTankData.tank_L + " " + aquaTankData.unit + " tank. Currently " + Math.round(aquaTankData.level_pct) + "% full. How can I help?"
+      ];
+      greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    }
+    appendAquaMsg(greeting, 'bot');
+    aquaHistory.push({role:'model', parts:[{text:greeting}]});
+  }
+}
+
+function appendAquaMsg(text, role) {
+  var msgs = document.getElementById('aqua-messages');
+  if (!msgs) return;
+  var div = document.createElement('div');
+  div.className = role === 'bot' ? 'aqua-msg-bot' : 'aqua-msg-user';
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showAquaTyping() {
+  var msgs = document.getElementById('aqua-messages');
+  var div = document.createElement('div');
+  div.className = 'aqua-typing';
+  div.id = 'aqua-typing';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideAquaTyping() {
+  var el = document.getElementById('aqua-typing');
+  if (el) el.remove();
+}
+
+function usePill(btn) {
+  document.getElementById('aqua-pills').style.display = 'none';
+  document.getElementById('aqua-input').value = btn.textContent;
+  sendAqua();
+}
+
+function showConfirm(text, action) {
+  aquaPendingAction = action;
+  var confirmDiv = document.getElementById('aqua-confirm');
+  var confirmText = document.getElementById('aqua-confirm-text');
+  confirmDiv.style.display = 'block';
+  confirmText.textContent = text;
+  document.getElementById('aqua-pills').style.display = 'none';
+}
+
+function confirmAction(yes) {
+  document.getElementById('aqua-confirm').style.display = 'none';
+  if (yes && aquaPendingAction) {
+    sendCommand(aquaPendingAction);
+    appendAquaMsg('Done! I\'ve sent the command to your tank.', 'bot');
+  } else {
+    appendAquaMsg('No problem, leaving it as is.', 'bot');
+  }
+  aquaPendingAction = null;
+}
+
+async function sendAqua() {
+  var inp = document.getElementById('aqua-input');
+  if (!inp) return;
+  var msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  document.getElementById('aqua-pills').style.display = 'none';
+  document.getElementById('aqua-confirm').style.display = 'none';
+
+  appendAquaMsg(msg, 'user');
+  aquaHistory.push({role:'user', parts:[{text:msg}]});
+
+  showAquaTyping();
+
+  try {
+    var body = {
+      system_instruction: {parts: [{text: getAquaSystemPrompt()}]},
+      contents: aquaHistory,
+      generationConfig: {
+        temperature: 0.9,
+        maxOutputTokens: 350,
+        topP: 0.95
+      }
+    };
+
+    var res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+
+    var data = await res.json();
+    hideAquaTyping();
+
+    if (!res.ok) throw new Error(data.error?.message || 'API error');
+
+    var reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, something went wrong. Try again.";
+
+    // Check for action confirmation request
+    var confirmMatch = reply.match(/CONFIRM:(\{[^}]+\})/);
+    if (confirmMatch) {
+      try {
+        var action = JSON.parse(confirmMatch[1]);
+        reply = reply.replace(/CONFIRM:\{[^}]+\}/, '').trim();
+        appendAquaMsg(reply, 'bot');
+        aquaHistory.push({role:'model', parts:[{text:reply}]});
+        showConfirm(action.label + ' — confirm?', action.cmd);
+        return;
+      } catch(e) {}
+    }
+
+    aquaHistory.push({role:'model', parts:[{text:reply}]});
+    appendAquaMsg(reply, 'bot');
+
+  } catch(err) {
+    hideAquaTyping();
+    appendAquaMsg("Hmm, I couldn't connect to my brain right now. Check your internet and try again.", 'bot');
+    console.error('Aqua error:', err);
+  }
 }
 
 </script>
