@@ -687,6 +687,131 @@
       white-space: nowrap;
       overflow-x: auto;
     }
+  
+    /* ── CHAT PANEL ── */
+    #panel-chat {
+      display: none;
+      flex-direction: column;
+      height: calc(100vh - 130px);
+      padding: 0;
+    }
+    #panel-chat.active { display: flex; }
+    .chat-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .chat-header-title {
+      font-size: 17px; font-weight: 700; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .aqua-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); animation: pulse-green 2s infinite;
+    }
+    @keyframes pulse-green {
+      0%,100%{opacity:1} 50%{opacity:0.4}
+    }
+    .chat-header-sub {
+      font-size: 12px; color: var(--text3); margin-top: 2px;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      padding: 16px 16px 8px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .chat-msg {
+      max-width: 82%; padding: 11px 15px;
+      border-radius: 18px; font-size: 14px;
+      line-height: 1.55; word-wrap: break-word;
+    }
+    .chat-msg.bot {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .chat-msg.user {
+      background: var(--blue);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-msg.typing {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      padding: 14px 18px;
+    }
+    .typing-dots { display: flex; gap: 4px; align-items: center; }
+    .typing-dots span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--text3); animation: bounce 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .chat-input-area {
+      padding: 10px 12px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1; padding: 11px 16px;
+      border: 1.5px solid var(--border2);
+      border-radius: 22px;
+      font-size: 14px; color: var(--text);
+      background: var(--bg);
+      outline: none; font-family: inherit;
+      transition: border-color 0.2s;
+      resize: none; max-height: 80px;
+    }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send-btn {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--blue); color: white; border: none;
+      cursor: pointer; font-size: 17px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+      transition: all 0.15s;
+    }
+    .chat-send-btn:active { transform: scale(0.95); }
+    .chat-locked-state {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 40px 24px; gap: 12px;
+    }
+    .chat-lock-icon { font-size: 44px; }
+    .chat-lock-title { font-size: 18px; font-weight: 700; }
+    .chat-lock-desc {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.6; max-width: 260px;
+    }
+    .chat-unlock-btn {
+      padding: 13px 28px;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: white; border: none; border-radius: 12px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: inherit; margin-top: 8px;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    .chat-suggestion-pills {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 0 12px 10px;
+    }
+    .pill {
+      padding: 6px 13px; background: var(--blue-light);
+      color: var(--blue); border: none; border-radius: 16px;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .pill:active { transform: scale(0.97); }
+
   </style>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#2563eb">
@@ -967,6 +1092,47 @@
     <div style="color: var(--blue); font-weight: 600;">Set up cloud access →</div>
   </div>
 
+
+  <!-- ==================== CHAT PANEL ==================== -->
+  <div id="panel-chat">
+    <!-- Locked state shown in BT mode -->
+    <div class="chat-locked-state" id="chat-locked">
+      <div class="chat-lock-icon">🤖</div>
+      <div class="chat-lock-title">Meet Aqua</div>
+      <div class="chat-lock-desc">
+        Your AI tank assistant. Ask about water levels,
+        usage patterns, predictions, or control the pump
+        by just talking.
+      </div>
+      <button class="chat-unlock-btn" onclick="showUpgradeModal()">
+        Set up cloud access →
+      </button>
+    </div>
+    <!-- Active chat shown in cloud mode -->
+    <div id="chat-active-state" style="display:none;flex-direction:column;flex:1">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <div class="aqua-dot"></div>
+          Aqua
+        </div>
+        <div class="chat-header-sub">AquaIQ AI assistant · Powered by Gemini</div>
+      </div>
+      <div class="chat-messages" id="chat-messages"></div>
+      <div class="chat-suggestion-pills" id="chat-pills">
+        <button class="pill" onclick="usePill(this)">How much water do I have?</button>
+        <button class="pill" onclick="usePill(this)">How long will it last?</button>
+        <button class="pill" onclick="usePill(this)">Fill to 80%</button>
+        <button class="pill" onclick="usePill(this)">Any leaks?</button>
+      </div>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chat-input" type="text"
+          placeholder="Ask Aqua anything..."
+          onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="chat-send-btn" onclick="sendChat()">↑</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Bottom navigation -->
   <div class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('home', this)">
@@ -976,6 +1142,10 @@
     <button class="nav-item" onclick="switchTab('alerts', this)">
       <span class="nav-icon" id="alerts-icon">🔒</span>
       <span>Alerts</span>
+    </button>
+    <button class="nav-item" id="chat-tab-btn" onclick="switchTab('chat', this)">
+      <span class="nav-icon">🤖</span>
+      <span>Aqua</span>
     </button>
     <button class="nav-item" onclick="switchTab('settings', this)">
       <span class="nav-icon">⚙️</span>
@@ -1172,6 +1342,8 @@ function handleBluetoothData(event) {
 }
 
 function handleJSONMessage(msg) {
+  // Keep chat context updated with live data
+  if (typeof updateChatContext === 'function') updateChatContext(msg);
   console.log('Received:', msg);
   
   switch (msg.type) {
@@ -1351,6 +1523,7 @@ function openDashboard(mode) {
   
   if (mode === 'cloud') {
     connectCloud();
+    activateChat && setTimeout(function(){}, 100);
     document.getElementById('fill-btn').disabled = true;
     document.getElementById('drain-btn').disabled = true;
   } else if (bluetoothCharacteristic) {
@@ -1365,10 +1538,38 @@ function openDashboard(mode) {
 function switchTab(tab, element) {
   document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
   element.classList.add('active');
-  
+
+  // Hide all panels first
+  const panels = ['panel-home', 'panel-alerts', 'panel-settings', 'panel-chat'];
+  panels.forEach(function(p) {
+    const el = document.getElementById(p);
+    if (el) el.classList.remove('active');
+  });
+
   if (tab === 'alerts' && currentMode === 'bluetooth') {
     showUpgradeModal();
+    document.getElementById('panel-home').classList.add('active');
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
+    element.classList.remove('active');
+    return;
   }
+
+  if (tab === 'chat') {
+    if (currentMode === 'bluetooth') {
+      showUpgradeModal();
+      document.getElementById('panel-home').classList.add('active');
+      document.querySelectorAll('.nav-item')[0].classList.add('active');
+      element.classList.remove('active');
+      return;
+    }
+    document.getElementById('panel-chat').classList.add('active');
+    activateChat();
+    return;
+  }
+
+  const panelId = 'panel-' + tab;
+  const panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
 }
 
 // ==================== MODALS & TOASTS ====================
@@ -1403,6 +1604,188 @@ function togglePassword() {
 if (!navigator.bluetooth) {
   document.getElementById('scan-help').innerHTML = '❌ Web Bluetooth not supported. Use Chrome on Android.';
 }
+
+// ==================== AQUA AI CHATBOT ====================
+const GEMINI_KEY = 'AIzaSyDz8x5hGY8KQVQ8i3qnvOPPiVT_8PvNTbk';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + GEMINI_KEY;
+
+let chatHistory = [];
+let tankContext = {
+  level_pct: 58, volume_L: 290, tank_L: 500,
+  pump: 'OFF', unit: 'L', avg_daily: 43,
+  days_left: 6.7, leak: false
+};
+
+function updateChatContext(data) {
+  if (data.level_pct !== undefined) tankContext.level_pct = data.level_pct;
+  if (data.volume_L !== undefined) tankContext.volume_L = data.volume_L;
+  if (data.tank_L !== undefined) tankContext.tank_L = data.tank_L;
+  if (data.pump !== undefined) tankContext.pump = data.pump;
+  if (data.unit !== undefined) tankContext.unit = data.unit;
+  if (data.leak !== undefined) tankContext.leak = data.leak;
+  if (data.avg_daily_L !== undefined) tankContext.avg_daily = data.avg_daily_L;
+  if (data.days_left !== undefined) tankContext.days_left = data.days_left;
+}
+
+function getSystemPrompt() {
+  return `You are Aqua, the AI assistant for AquaIQ — a smart water tank monitoring system. You have a friendly, concise, and slightly witty personality. You care about water conservation.
+
+Current tank status:
+- Level: ${Math.round(tankContext.level_pct)}% full
+- Volume: ${Math.round(tankContext.volume_L)} ${tankContext.unit} of ${tankContext.tank_L} ${tankContext.unit} total
+- Pump: ${tankContext.pump}
+- Avg daily usage: ${tankContext.avg_daily} ${tankContext.unit}/day
+- Days remaining: ~${Math.round(tankContext.days_left * 10) / 10} days
+- Leak detected: ${tankContext.leak ? 'YES - ALERT' : 'No'}
+
+You can control the tank. If the user asks you to fill, drain, stop the pump, or fill to a specific percentage, include a JSON action at the END of your response in this exact format on its own line:
+ACTION:{"cmd":"FILL"}
+or ACTION:{"cmd":"DRAIN"}
+or ACTION:{"cmd":"STOP"}
+or ACTION:{"cmd":"FILLTO 80"}
+
+Rules:
+- Keep responses SHORT (2-3 sentences max unless explaining something complex)
+- Never repeat yourself across messages
+- Be conversational, not robotic
+- If the tank is critically low (<10%), always mention it urgently
+- If a leak is detected, always warn the user
+- Don't say "I'm an AI" or "As an AI" — you're Aqua, a tank assistant
+- Use the actual numbers from the tank status above`;
+}
+
+function appendMsg(text, role) {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  // Handle newlines
+  div.innerHTML = text.replace(/\n/g, '<br>');
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg typing';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function hidePills() {
+  const pills = document.getElementById('chat-pills');
+  if (pills) pills.style.display = 'none';
+}
+
+function usePill(btn) {
+  const text = btn.textContent;
+  hidePills();
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  if (!inp) return;
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  hidePills();
+
+  appendMsg(msg, 'user');
+  chatHistory.push({ role: 'user', parts: [{ text: msg }] });
+
+  showTyping();
+
+  try {
+    const body = {
+      system_instruction: { parts: [{ text: getSystemPrompt() }] },
+      contents: chatHistory,
+      generationConfig: {
+        temperature: 0.85,
+        maxOutputTokens: 300,
+        topP: 0.95
+      }
+    };
+
+    const res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+    hideTyping();
+
+    if (!res.ok) {
+      throw new Error(data.error?.message || 'API error');
+    }
+
+    let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't get a response. Try again.";
+
+    // Extract and execute action if present
+    const actionMatch = reply.match(/ACTION:(\{[^}]+\})/);
+    if (actionMatch) {
+      try {
+        const action = JSON.parse(actionMatch[1]);
+        reply = reply.replace(/ACTION:\{[^}]+\}/, '').trim();
+        // Execute the command
+        if (action.cmd) {
+          sendCommand(action.cmd);
+        }
+      } catch(e) {}
+    }
+
+    chatHistory.push({ role: 'model', parts: [{ text: reply }] });
+    appendMsg(reply, 'bot');
+
+  } catch (err) {
+    hideTyping();
+    appendMsg("Hmm, something went wrong connecting to my brain. Check your internet and try again.", 'bot');
+    console.error('Gemini error:', err);
+  }
+}
+
+function initChat() {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs || msgs.children.length > 0) return;
+
+  // Greeting based on tank status
+  let greeting;
+  if (tankContext.leak) {
+    greeting = "⚠️ Hey — I'm detecting a possible leak. The level is dropping faster than normal. Check your pipes!";
+  } else if (tankContext.level_pct < 10) {
+    greeting = "Hi, I'm Aqua! Quick warning — your tank is critically low at " + Math.round(tankContext.level_pct) + "%. Want me to start filling?";
+  } else if (tankContext.level_pct < 25) {
+    greeting = "Hi, I'm Aqua! Your tank is getting low (" + Math.round(tankContext.level_pct) + "%). You've got about " + Math.round(tankContext.days_left) + " days left. Anything I can help with?";
+  } else {
+    const greetings = [
+      "Hey! I'm Aqua, your tank assistant. Your water's looking good — " + Math.round(tankContext.level_pct) + "% full. What do you need?",
+      "Hi there! Aqua here. Tank is at " + Math.round(tankContext.level_pct) + "% — about " + Math.round(tankContext.days_left) + " days of water. Ask me anything.",
+      "Hello! I'm keeping an eye on your " + tankContext.tank_L + " " + tankContext.unit + " tank. Currently " + Math.round(tankContext.level_pct) + "% full. How can I help?"
+    ];
+    greeting = greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  appendMsg(greeting, 'bot');
+  chatHistory.push({ role: 'model', parts: [{ text: greeting }] });
+}
+
+function activateChat() {
+  document.getElementById('chat-locked').style.display = 'none';
+  document.getElementById('chat-active-state').style.display = 'flex';
+  setTimeout(initChat, 300);
+}
+
 </script>
 </body>
 </html>
