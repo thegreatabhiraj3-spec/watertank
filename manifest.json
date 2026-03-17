@@ -1,23 +1,16 @@
 {
   "name": "Water Tank",
   "short_name": "Tank",
-  "description": "Smart water tank monitor",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#f0f4f8",
+  "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ]
 }

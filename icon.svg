@@ -1,4 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="40" fill="#2563eb"/>
-  <text x="96" y="130" font-size="100" text-anchor="middle">💧</text>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="waterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4FC3F7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1976D2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="white"/>
+  
+  <path d="M256 40 C 256 40, 140 250, 140 340 A 116 116 0 1 0 372 340 C 372 250, 256 40, 256 40 Z" 
+        fill="url(#waterGrad)" />
+        
+  <path d="M210 320 Q 180 320, 180 280" stroke="white" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.3"/>
 </svg>
